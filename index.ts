@@ -17,7 +17,7 @@ async function reqHandler(req: Request) {
         const badgeUrl = `https://img.shields.io/badge/Tests-${testsFailed}%20Failing-${badgeColor}`
         return new Response(null, { headers:
             {
-                'Location': badgeUrl
+                'location': badgeUrl
             }
         })
     } else if (req.url.endsWith("/badges/build-status")) {
@@ -26,7 +26,7 @@ async function reqHandler(req: Request) {
         const badgeUrl = `https://img.shields.io/badge/Build-${badgeStatus}-${badgeColor}`
         return new Response(null, { headers: 
             {
-                'Location': badgeUrl
+                'location': badgeUrl
             }
         })
     }
@@ -49,9 +49,13 @@ function parseWorkflow(workflowData: XcodeCloudRequest) {
             case "ANALYZE":
                 analyzerWarnings = action.attributes.issueCounts.analyzerWarnings
                 break
+            case "ARCHIVE":
+                // TODO: Parse archive info
+                break
             default:
                 // What the heck is this
                 console.log(`Got unexpected build action: ${action.attributes.actionType}`)
+                break
         }
     })
 }
