@@ -15,8 +15,8 @@ async function reqHandler(req: Request) {
     } else if (req.url.endsWith("/badges/tests-status")) {
         const badgeColor = (testsFailed == 0) ? "green" : "red"
         const badgeUrl = `https://img.shields.io/badge/Tests-${testsFailed}%20Failing-${badgeColor}`
-        const resp = await fetch(badgeUrl)
-        return new Response(resp.body, { headers:
+        const badgeSvg = await fetch(badgeUrl)
+        return new Response(badgeSvg.body, { headers:
             {
                 'content-type': 'image/svg+xml;charset=utf-8',
                 'location': badgeUrl
@@ -26,8 +26,10 @@ async function reqHandler(req: Request) {
         const badgeColor = (buildStatus) ? "green" : "red"
         const badgeStatus = (buildStatus) ? "Passing" : "Failing"
         const badgeUrl = `https://img.shields.io/badge/Build-${badgeStatus}-${badgeColor}`
-        return new Response(null, { headers: 
+        const badgeSvg = await fetch(badgeUrl)
+        return new Response(badgeSvg.body, { headers: 
             {
+                'content-type': 'image/svg+xml;charset=utf-8',
                 'location': badgeUrl
             }
         })
