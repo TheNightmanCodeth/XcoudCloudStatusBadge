@@ -18,6 +18,7 @@ async function reqHandler(req: Request) {
         const badgeSvg = await fetch(badgeUrl)
         return new Response(badgeSvg.body, { headers:
             {
+                'cache-control': 'no-cache',
                 'content-type': 'image/svg+xml;charset=utf-8',
                 'location': badgeUrl
             }
@@ -29,6 +30,7 @@ async function reqHandler(req: Request) {
         const badgeSvg = await fetch(badgeUrl)
         return new Response(badgeSvg.body, { headers: 
             {
+                'cache-control': 'no-cache',
                 'content-type': 'image/svg+xml;charset=utf-8',
                 'location': badgeUrl
             }
