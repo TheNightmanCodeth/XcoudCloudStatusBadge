@@ -6,7 +6,9 @@ let status = false;
 
 async function reqHandler(req: Request) {
     if (req.url.endsWith("/builder")) {
-        const completionStatus = (await req.json()).ciBuildRun.attributes["completionStatus"]
+        const json = await req.json()
+        writeJson(json)
+        const completionStatus = json.ciBuildRun.attributes["completionStatus"]
         if (completionStatus == "SUCCEEDED") {
             // Build success, publish passing badge
             console.log("success")
@@ -32,8 +34,26 @@ async function reqHandler(req: Request) {
                 "Content-Type": "image/svg+xml;charset=utf-8",
             }
         })
+    } else if (req.url.endsWith("/out")) {
+        let file
+        try {
+            file = await Deno.open("./out.json", { read: true })
+        } catch {
+            return new Response("No logs available yet.", { status: 404 })
+        }
+        return new Response(file?.readable)
     }
     return new Response(null, { status: 404 })
+}
+
+function writeJson(json: JSON): boolean {
+    try {
+        Deno.writeTextFileSync("./out.json", JSON.stringify(json))
+        return true
+    } catch (e) {
+        console.log(e)
+        return false
+    }
 }
 
 serve(reqHandler, { port: port })
