@@ -16,6 +16,7 @@ async function reqHandler(req: Request) {
         const badgeColor = (testsFailed == 0) ? "green" : "red"
         const badgeUrl = `https://img.shields.io/badge/Tests-${testsFailed}%20Failing-${badgeColor}`
         const badgeSvg = await fetch(badgeUrl)
+        badgeSvg.headers.delete("Cache-Control")
         return new Response(badgeSvg.body, { headers:
             {
                 'Cache-Control': 'private, max-age=0, no-cache',
