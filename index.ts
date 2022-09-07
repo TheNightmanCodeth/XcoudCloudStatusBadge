@@ -20,7 +20,6 @@ async function reqHandler(req: Request) {
             {
                 'Cache-Control': 'private, max-age=0, no-cache',
                 'Content-Type': 'image/svg+xml;charset=utf-8',
-                'Location': badgeUrl
             }
         })
     } else if (req.url.endsWith("/badges/build-status")) {
@@ -30,9 +29,8 @@ async function reqHandler(req: Request) {
         const badgeSvg = await fetch(badgeUrl)
         return new Response(badgeSvg.body, { headers: 
             {
-                'cache-control': 'private, max-age=0, no-cache',
-                'content-type': 'image/svg+xml;charset=utf-8',
-                'location': badgeUrl
+                'Cache-Control': 'private, max-age=0, no-cache',
+                'Content-Type': 'image/svg+xml;charset=utf-8',
             }
         })
     }
