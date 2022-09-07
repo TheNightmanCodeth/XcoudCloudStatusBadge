@@ -1,0 +1,152 @@
+{
+    "webhook": {
+        "id": "12345678-abcd-1234-5678-a12345bc4567",
+        "name": "Issue Tracker",
+        "url": "https://issues.example.com/webhooks"
+    },
+    "app": {
+        "id": "12345678-abcd-1234-5678-a12345bc4567",
+        "type": "apps"
+    },
+    "ciWorkflow": {
+        "id": "12345678-abcd-1234-5678-a12345bc4567",
+        "type": "ciWorkflows",
+        "attributes": {
+            "name": "Pull Requests",
+            "description": "Starts Builds from Pull Requests.",
+            "isEnabled": true,
+            "isLockedForEditing": false
+        }
+    },
+    "ciProduct": {
+        "id": "12345678-abcd-1234-5678-a12345bc4567",
+        "type": "ciProducts",
+        "attributes": {
+            "name": "Example App",
+            "createdDate": "2021-06-07T10:00:00.000000-07:00",
+            "productType": "APP"
+        }
+    },
+    "ciBuildRun": {
+        "id": "12345678-abcd-1234-5678-a12345bc4567",
+        "type": "ciBuildRuns",
+        "attributes": {
+            "number": 12,
+            "createdDate": "2021-06-07T10:00:00.000000-07:00",
+            "sourceCommit": {
+                "commitSha": "0123456789abcdefghij01234567890abcdefghi",
+                "author": {
+                    "displayName": "Anne Johnson"
+                },
+                "committer": {
+                    "displayName": "Anne Johnson"
+                },
+                "htmlUrl": "https://example.com/commit/abcdef1234567890"
+            },
+            "destinationCommit": {
+                "commitSha": "abcdefghij01234567890abcdefghi0123456789",
+                "author": {
+                    "displayName": "Juan Chavez"
+                },
+                "committer": {
+                    "displayName": "Juan Chavez"
+                },
+                "htmlUrl": "https://example.com/commit/abcdef1234567890"
+            },
+            "isPullRequestBuild": true,
+            "executionProgress": "COMPLETE",
+            "completionStatus": "SUCCEEDED"
+        }
+    },
+    "ciBuildActions": [{
+        "id": "12345678-abcd-1234-5678-a12345bc4567",
+        "type": "ciBuildActions",
+        "attributes": {
+            "name": "analyze",
+            "actionType": "ANALYZE",
+            "issueCounts": {
+                "analyzerWarnings": 10,
+                "errors": 0,
+                "testFailures": 0,
+                "warnings": 0
+            },
+            "executionProgress": "COMPLETE",
+            "completionStatus": "SUCCEEDED",
+            "isRequiredToPass": false
+        },
+        "relationships": {}
+    }, {
+        "id": "12345678-abcd-1234-5678-a12345bc4567",
+        "type": "ciBuildActions",
+        "attributes": {
+            "name": "build",
+            "actionType": "ARCHIVE",
+            "issueCounts": {
+                "analyzerWarnings": 0,
+                "errors": 0,
+                "testFailures": 0,
+                "warnings": 3
+            },
+            "executionProgress": "COMPLETE",
+            "completionStatus": "SUCCEEDED",
+            "isRequiredToPass": true
+        },
+        "relationships": {
+            "builds": {
+                "id": "12345678-abcd-1234-5678-a12345bc4567",
+                "type": "builds",
+                "attributes": {
+                    "platform": "IOS"
+                }
+            }
+        }
+    }],
+    "scmProvider": {
+        "type": "scmProviders",
+        "attributes": {
+            "scmProviderType": {
+                "scmProviderType": "GITHUB_CLOUD",
+                "displayName": "GitHub",
+                "isOnPremise": false
+            },
+            "endpoint": "https://github.com/example/example.git"
+        }
+    },
+    "scmRepository": {
+        "id": "12345678-abcd-1234-5678-a12345bc4567",
+        "type": "scmRepositories",
+        "attributes": {
+            "httpCloneUrl": "https://github.com/example/test.git)",
+            "sshCloneUrl": "ssh://git@github.com/example/test.git",
+            "ownerName": "example",
+            "repositoryName": "example app"
+        }
+    },
+    "scmPullRequest": {
+        "id": "12345678-abcd-1234-5678-a12345bc4567",
+        "type": "scmPullRequests",
+        "attributes": {
+            "title": "Add accessibility labels.",
+            "number": 123,
+            "htmlUrl": "https://example.com/example/example-app/pull/123)",
+            "sourceRepositoryOwner": "example",
+            "sourceRepositoryName": "example source repository name",
+            "sourceBranchName": "annejohnson/new-features",
+            "destinationRepositoryOwner": "example",
+            "destinationRepositoryName": "example destination repository name",
+            "destinationBranchName": "main",
+            "isClosed": false,
+            "isCrossRepository": false
+        }
+    },
+    "scmGitReference": {
+        "id": "12345678-abcd-1234-5678-a12345bc4567",
+        "type": "scmGitReferences",
+        "attributes": {
+            "name": "annejohnson/new-feature",
+            "canonicalName": "refs/heads/annejohnson/new-feature",
+            "isDeleted": false,
+            "kind": "BRANCH"
+        }
+    }
+}
