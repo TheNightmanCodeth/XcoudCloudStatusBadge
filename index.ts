@@ -15,8 +15,10 @@ async function reqHandler(req: Request) {
     } else if (req.url.endsWith("/badges/tests-status")) {
         const badgeColor = (testsFailed == 0) ? "green" : "red"
         const badgeUrl = `https://img.shields.io/badge/Tests-${testsFailed}%20Failing-${badgeColor}`
-        return new Response(null, { headers:
+        const resp = await fetch(badgeUrl)
+        return new Response(resp.body, { headers:
             {
+                'content-type': 'image/svg+xml;charset=utf-8',
                 'location': badgeUrl
             }
         })
