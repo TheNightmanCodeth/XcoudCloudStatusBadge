@@ -1,46 +1,59 @@
-// Start listening on port 80
-import { serve } from "https://deno.land/std@0.154.0/http/server.ts";
+import { serve } from "https://deno.land/std@0.154.0/http/server.ts"
+import { XcodeCloudRequest } from "./models.ts"
 
 const port = 1337
-let status = false
-let lastMsg = "No message yet):"
+
+let testsFailed = 0
+let buildStatus = false
+let analyzerWarnings = 0
 
 async function reqHandler(req: Request) {
     if (req.url.endsWith("/builder")) {
-        const json = await req.json()
-        lastMsg = JSON.stringify(json)
-        const completionStatus = json.ciBuildRun.attributes["completionStatus"]
-        if (completionStatus == "SUCCEEDED") {
-            // Build success, publish passing badge
-            console.log("success")
-            console.log(lastMsg)
-            console.log(await req.text)
-            status = true
-        } else {
-            // Build failing, publish failing badge
-            status = false
-        }
-        return new Response(null, { status: 200 })
-    } else if (req.url.endsWith("/badge")) {
-        // Return passing badge
-        const filepath = status ? "./passing.svg" : "./failing.svg"
-        console.log(filepath)
-        let file
-        try {
-            file = await Deno.open(filepath, { read: true })
-        } catch {
-            return new Response("404 not found", { status: 404 })
-        }
-        const readableStream = file.readable
-        return new Response(readableStream, { headers: 
-            { 
-                "Content-Type": "image/svg+xml;charset=utf-8",
+        const workflowData: XcodeCloudRequest = await req.json()
+        parseWorkflow(workflowData)
+        return new Response("Thank you, Xcode!", { status: 200 })
+    } else if (req.url.endsWith("/badges/tests-status")) {
+        const badgeColor = (testsFailed == 0) ? "green" : "red"
+        const badgeUrl = `https://img.shields.io/badge/Tests-${testsFailed}%20Failing-${badgeColor}`
+        return new Response(null, { headers:
+            {
+                'Location': badgeUrl
             }
         })
-    } else if (req.url.endsWith("/out")) {
-        return new Response(lastMsg)
+    } else if (req.url.endsWith("/badges/build-status")) {
+        const badgeColor = (buildStatus) ? "green" : "red"
+        const badgeStatus = (buildStatus) ? "Passing" : "Failing"
+        const badgeUrl = `https://img.shields.io/badge/Build-${badgeStatus}-${badgeColor}`
+        return new Response(null, { headers: 
+            {
+                'Location': badgeUrl
+            }
+        })
     }
     return new Response(null, { status: 404 })
+}
+
+/**
+ * Parses request body from Xcode Cloud and sets values accordingly for badge generation
+ * @param {XcodeCloudRequest} workflowData - The request body from Xcode Cloud
+ */
+function parseWorkflow(workflowData: XcodeCloudRequest) {
+    workflowData.ciBuildActions.forEach(action => {
+        switch (action.attributes.actionType) {
+            case "TEST":
+                testsFailed = action.attributes.issueCounts.testFailures
+                break
+            case "BUILD":
+                buildStatus = (action.attributes.completionStatus == "SUCCESS")
+                break
+            case "ANALYZE":
+                analyzerWarnings = action.attributes.issueCounts.analyzerWarnings
+                break
+            default:
+                // What the heck is this
+                console.log(`Got unexpected build action: ${action.attributes.actionType}`)
+        }
+    })
 }
 
 serve(reqHandler, { port: port })
