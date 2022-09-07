@@ -13,6 +13,8 @@ async function reqHandler(req: Request) {
         if (completionStatus == "SUCCEEDED") {
             // Build success, publish passing badge
             console.log("success")
+            console.log(lastMsg)
+            console.log(await req.text)
             status = true
         } else {
             // Build failing, publish failing badge
