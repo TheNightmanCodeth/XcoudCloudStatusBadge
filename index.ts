@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.154.0/http/server.ts"
+import * as etag from "https://deno.land/x/oak@v10.6.0/etag.ts";
 import { XcodeCloudRequest } from "./models.ts"
 
 const port = 1337
@@ -18,6 +19,7 @@ async function reqHandler(req: Request) {
         const badgeSvg = await fetch(badgeUrl)
         return new Response(badgeSvg.body, { headers:
             {
+                'ETag': await etag.calculate(Date()),
                 'Cache-Control': 'private, max-age=0, no-cache',
                 'Content-Type': 'image/svg+xml;charset=utf-8',
             }
@@ -29,6 +31,7 @@ async function reqHandler(req: Request) {
         const badgeSvg = await fetch(badgeUrl)
         return new Response(badgeSvg.body, { headers: 
             {
+                'ETag': await etag.calculate(Date()),
                 'Cache-Control': 'private, max-age=0, no-cache',
                 'Content-Type': 'image/svg+xml;charset=utf-8',
             }
