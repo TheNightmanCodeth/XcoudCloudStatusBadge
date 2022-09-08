@@ -19,7 +19,6 @@ async function reqHandler(req: Request) {
         const badgeSvg = await fetch(badgeUrl)
         const etagEntry = await etag.calculate(`teststatus${testsFailed}`)
         const expires = new Date()
-        expires.setHours(expires.getHours() + 1)
         return new Response(badgeSvg.body, { headers:
             {
                 'Expires': expires.toString(),
