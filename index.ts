@@ -18,14 +18,12 @@ async function reqHandler(req: Request) {
         const badgeUrl = `https://img.shields.io/badge/Tests-${testsFailed}%20Failing-${badgeColor}`
         const badgeSvg = await fetch(badgeUrl)
         const etagEntry = await etag.calculate(`teststatus${testsFailed}`)
-        const expires = new Date()
         return new Response(badgeSvg.body, { headers:
             {
-                'Expires': expires.toString(),
                 'ETag': etagEntry,
                 'Cache-Control': 'private, max-age=0, no-cache',
                 'Content-Type': 'image/svg+xml;charset=utf-8',
-                'Link': badgeUrl
+                'Location': badgeUrl
             }
         })
     } else if (req.url.endsWith("/badges/build-status")) {
@@ -34,15 +32,12 @@ async function reqHandler(req: Request) {
         const badgeUrl = `https://img.shields.io/badge/Build-${badgeStatus}-${badgeColor}`
         const badgeSvg = await fetch(badgeUrl)
         const etagEntry = await etag.calculate(`buildstatus${badgeStatus}`)
-        const expires = new Date()
-        expires.setHours(expires.getHours() + 1)
         return new Response(badgeSvg.body, { headers: 
             {
-                'Expires': expires.toString(),
                 'ETag': etagEntry,
                 'Cache-Control': 'private, max-age=0, no-cache',
                 'Content-Type': 'image/svg+xml;charset=utf-8',
-                'Link': badgeUrl
+                'Location': badgeUrl
             }
         })
     }
