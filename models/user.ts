@@ -14,24 +14,24 @@ const db = client.database("XcodeBadgeMaker");
 const users = db.collection<UserSchema>("users");
 
 export const createUser = async (user: UserSchema) => {
-    if (await findUser(user._id) == undefined) {
+    if (await users.findOne({ username: user.username }) == undefined) {
         await users.insertOne(user);
-        return await findUser(user._id)
+        return await findUser(user.username)
     } else {
         return undefined
     }
 }
 
-export const findUser = async (id: ObjectId) => {
-    return await users.findOne({ _id: id })
+export const findUser = async (username: string) => {
+    return await users.findOne({ username: username })
 }
 
-export const deleteUser = async (id: ObjectId) => {
-    await users.deleteOne({ _id: id });
+export const deleteUser = async (username: string) => {
+    await users.deleteOne({ username: username });
 }
 
-export const addProjectTo = async (id: ObjectId, project: ProjectSchema) => {
-    const user = await users.findOne({ _id: id })
+export const addProjectTo = async (username: string, project: ProjectSchema) => {
+    const user = await users.findOne({ username: username })
     user?.projects.push(project)
-    users.updateOne({ _id: id }, { $set: { projects: user?.projects }})
+    users.updateOne({ username: username }, { $set: { projects: user?.projects }})
 }
