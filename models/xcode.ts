@@ -131,7 +131,7 @@ export interface ScmGitReference {
     }
 }
 
-export interface XcodeCloudRequest {
+export type XcodeCloudRequest = {
     webhook: Webhook
     app: App
     ciWorkflow: Workflow
