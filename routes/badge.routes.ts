@@ -1,5 +1,4 @@
 import { Context, helpers } from "https://deno.land/x/oak/mod.ts";
-import { ObjectId } from "https://deno.land/x/web_bson@v0.2.5/mod.ts";
 
 import * as users from "../models/user.ts";
 
@@ -14,9 +13,9 @@ const responseHeaders: ResponseHeader[] = [
 ]
 
 export const testsBadge = async (ctx: Context) => {
-    const { userId, projectId } = helpers.getQuery(ctx, { mergeParams: true })
-    const user = await users.findUser(new ObjectId(userId))
-    const project = user?.projects.find(e => e._id == new ObjectId(projectId))
+    const { username, projectName } = helpers.getQuery(ctx, { mergeParams: true })
+    const user = await users.findUser(username)
+    const project = user?.projects.find(project => project.name == projectName)
     const testsFailed = project?.testsFailing
     
     const badgeColor = (testsFailed == 0) ? "green" : "red";
@@ -30,9 +29,9 @@ export const testsBadge = async (ctx: Context) => {
 }
 
 export const buildBadge = async (ctx: Context) => {
-    const { userId, projectId } = helpers.getQuery(ctx, { mergeParams: true })
-    const user = await users.findUser(new ObjectId(userId))
-    const project = user?.projects.find(e => e._id == new ObjectId(projectId))
+    const { username, projectName } = helpers.getQuery(ctx, { mergeParams: true })
+    const user = await users.findUser(username)
+    const project = user?.projects.find(project => project.name == projectName)
     const buildStatus = project?.buildStatus
 
     const badgeColor = (buildStatus) ? "green" : "red";

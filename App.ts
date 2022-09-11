@@ -6,4 +6,6 @@ const app = new Application();
 
 app.use(router.routes());
 
+console.log("Starting server on http://localhost:8000/")
+
 await app.listen({ port });

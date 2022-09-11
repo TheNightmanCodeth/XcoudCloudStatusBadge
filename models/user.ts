@@ -35,3 +35,20 @@ export const addProjectTo = async (username: string, project: ProjectSchema) => 
     user?.projects.push(project)
     users.updateOne({ username: username }, { $set: { projects: user?.projects }})
 }
+
+interface ProjectArgs {
+    name?: string | undefined;
+    buildStatus?: boolean | undefined;
+    testsFailing?: number | undefined;
+    testsPassing?: number | undefined;
+}
+
+export async function updateProject(username: string, projectName: string, args: ProjectArgs) {
+    const user = await users.findOne({ username: username })
+    const toUpdate = user!.projects.find(p => p.name == projectName)
+    if (args.name != undefined) toUpdate!.name = args.name
+    if (args.buildStatus != undefined) toUpdate!.buildStatus = args.buildStatus
+    if (args.testsFailing != undefined) toUpdate!.testsFailing = args.testsFailing
+    if (args.testsPassing != undefined) toUpdate!.testsPassing = args.testsPassing
+    users.updateOne({ username: username }, { $set: { projects: user?.projects }})
+}
