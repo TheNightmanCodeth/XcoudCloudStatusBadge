@@ -6,6 +6,8 @@ Built with [Deno](https://deno.land) with the help of [Shields](https://shields.
 
 # Tutorial (WIP - NOT READY)
 
+When the site is deployed, setup will look something like this:
+
 - Create an account at [XCBadger]()
 - Add a new project
 - Add your project's webhook URL to Xcode Cloud from App Store Connect
@@ -15,4 +17,3 @@ Built with [Deno](https://deno.land) with the help of [Shields](https://shields.
 > zsh -c "$(curl -fsSL https://xcbadger.tech/(your_username)/(your_projectname)/builder/post-inst)"
 - The next time you run an Xcode Cloud build, keep an eye on your build logs
 - Follow the instructions on your project page at XCBadger to add the badge to your README
-
