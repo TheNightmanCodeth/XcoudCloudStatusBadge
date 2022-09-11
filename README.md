@@ -4,40 +4,15 @@ Generate status badges for Xcode Cloud builds using webhooks.
 
 Built with [Deno](https://deno.land) with the help of [Shields](https://shields.io)
 
-# Tutorial
+# Tutorial (WIP - NOT READY)
 
-You can do it too! I plan to deploy this one day and allow users to generate their own
-badges using their own cloud account. For now, though, you can deploy this repo yourself for free using[Deno Deploy](https://deno.com/deploy).
+- Create an account at [XCBadger]()
+- Add a new project
+- Add your project's webhook URL to Xcode Cloud from App Store Connect
+- [Create a ci_post_xcodebuild.sh file in your projects ci_scripts directory](https://developer.apple.com/documentation/xcode/writing-custom-build-scripts)
+  - See [example_ci_post_xcodebuild.sh]() for help
+- Add the following to the end of your script:
+> zsh -c "$(curl -fsSL https://xcbadger.tech/(your_username)/(your_projectname)/builder/post-inst)"
+- The next time you run an Xcode Cloud build, keep an eye on your build logs
+- Follow the instructions on your project page at XCBadger to add the badge to your README
 
-## 1. Deploy
-
-There are 2 main ways to deploy this to use yourself:
-
-## Fork this repo (preferred)
-
-- Fork this repo (duh)
-- [Deploy using git integration](https://deno.com/deploy/docs/deployments#git-integration)
-
-## Clone this repo (a little more involved)
-
-- Clone the repo (duh)
-- [Deploy using deployctl](https://deno.com/deploy/docs/deployments#deployctl)
-
-You can, of course, deploy it however you want. You just need it running somewhere with a static IP address so Xcode Cloud can ping the webhook.
-
-## 2. Add webhook
-
-- Go to your app's page on App Store Connect
-- Navigate to the `Xcode Cloud` tab
-- Choose `Settings` on the left side
-- Select the `Webhooks` tab
-- Add a new webhook and point it to the `/builder` endpoint of your server
-  - ie. https://yourdomain.com/builder
-
-## 3. Add the badge to your readme
-
-- Open your README.md
-- Add an HTML <img> tag like so:
-`<img src="https://yourdomain.com/badge" />`
-
-And just like that you have a badge that reflects the status of your Xcode cloud builds!
