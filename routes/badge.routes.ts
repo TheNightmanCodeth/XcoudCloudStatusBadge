@@ -1,6 +1,7 @@
-import { Context, helpers } from "https://deno.land/x/oak/mod.ts";
+import { helpers } from "https://deno.land/x/oak/mod.ts";
 
 import * as users from "../models/user.ts";
+import { Context } from "../types.ts"
 
 type ResponseHeader = {
     key: string
@@ -13,14 +14,15 @@ const responseHeaders: ResponseHeader[] = [
 ]
 
 export const testsBadge = async (ctx: Context) => {
-    const { username, projectName } = helpers.getQuery(ctx, { mergeParams: true })
-    const user = await users.findUser(username)
-    const project = user?.projects.find(project => project.name == projectName)
+    const { username, projectId } = helpers.getQuery(ctx, { mergeParams: true })
+    const user = await users.findUserByUsername(username)
+    const project = user?.projects.find(project => project._id.toString() == projectId)
     const testsFailed = project?.testsFailing
+    const testsPassed = project?.testsPassing
     
     const badgeColor = (testsFailed == 0) ? "green" : "red";
     const badgeUrl =
-      `https://img.shields.io/badge/Tests-${testsFailed}%20Failing-${badgeColor}`;
+      `https://img.shields.io/badge/Tests-${testsFailed}%20Failing%2C%20${testsPassed}%20Passing-${badgeColor}`;
     const badgeSvg = await fetch(badgeUrl);
 
     setHeaders(ctx)
@@ -29,9 +31,9 @@ export const testsBadge = async (ctx: Context) => {
 }
 
 export const buildBadge = async (ctx: Context) => {
-    const { username, projectName } = helpers.getQuery(ctx, { mergeParams: true })
-    const user = await users.findUser(username)
-    const project = user?.projects.find(project => project.name == projectName)
+    const { username, projectId } = helpers.getQuery(ctx, { mergeParams: true })
+    const user = await users.findUserByUsername(username)
+    const project = user?.projects.find(project => project._id.toString() == projectId)
     const buildStatus = project?.buildStatus
 
     const badgeColor = (buildStatus) ? "green" : "red";
